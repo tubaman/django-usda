@@ -38,7 +38,7 @@ class Command(BaseCommand):
     )
     help = 'Updates/Created all SR22 data.'
     
-    def handle(self, **options):
+    def handle(*args, **options):
         FOOD_DES = 'FOOD_DES.txt'
         FD_GROUP = 'FD_GROUP.txt'
         NUT_DATA = 'NUT_DATA.txt'
