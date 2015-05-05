@@ -100,42 +100,37 @@ class Command(BaseCommand):
         missing_files = [required_file for required_file in required_files if not required_file in zip_file.namelist()]
         if missing_files:
             logging.error('%s does not appear to be a valid SR22 database.  Unable to extract %s' % (filename, ', '.join(missing_files)))
+       
+        with transaction.atomic(using=using):
         
-        transaction.commit_unless_managed(using=using)
-        transaction.enter_transaction_management(using=using)
-        transaction.managed(True, using=using)
-        
-        if parse_all or parse_group:
-            logging.info('Reading %s...' % FD_GROUP)
-            create_update_food_groups(''.join([byte for byte in zip_file.read(FD_GROUP)]).splitlines())
-        if parse_all or parse_food:
-            logging.info('Reading %s...' % FOOD_DES)
-            create_update_foods(''.join([byte for byte in zip_file.read(FOOD_DES)]).splitlines(), encoding)
-        if parse_all or parse_weight:
-            logging.info('Reading %s...' % WEIGHT)
-            create_update_weights(''.join([byte for byte in zip_file.read(WEIGHT)]).splitlines())
-        if parse_all or parse_nutrient:
-            logging.info('Reading %s...' % NUTR_DEF)
-            create_update_nutrients(''.join([byte for byte in zip_file.read(NUTR_DEF)]).splitlines(), encoding)
-        if parse_all or parse_footnote:
-            logging.info('Reading %s...' % FOOTNOTE)
-            create_update_footnotes(''.join([byte for byte in zip_file.read(FOOTNOTE)]).splitlines())
-        if parse_all or parse_datasource:
-            logging.info('Reading %s...' % DATA_SRC)
-            create_update_data_sources(''.join([byte for byte in zip_file.read(DATA_SRC)]).splitlines())
-        if parse_all or parse_derivation:
-            logging.info('Reading %s...' % DERIV_CD)
-            create_update_derivations(''.join([byte for byte in zip_file.read(DERIV_CD)]).splitlines())
-        if parse_all or parse_source:
-            logging.info('Reading %s...' % SRC_CD)
-            create_update_sources(''.join([byte for byte in zip_file.read(SRC_CD)]).splitlines())
-        if parse_all or parse_data:
-            logging.info('Reading %s...' % NUT_DATA)
-            create_update_nutrient_data(''.join([byte for byte in zip_file.read(NUT_DATA)]).splitlines())
-        
-        transaction.commit(using=using)
-        transaction.leave_transaction_management(using=using)
-        
+            if parse_all or parse_group:
+                logging.info('Reading %s...' % FD_GROUP)
+                create_update_food_groups(''.join([byte for byte in zip_file.read(FD_GROUP)]).splitlines())
+            if parse_all or parse_food:
+                logging.info('Reading %s...' % FOOD_DES)
+                create_update_foods(''.join([byte for byte in zip_file.read(FOOD_DES)]).splitlines(), encoding)
+            if parse_all or parse_weight:
+                logging.info('Reading %s...' % WEIGHT)
+                create_update_weights(''.join([byte for byte in zip_file.read(WEIGHT)]).splitlines())
+            if parse_all or parse_nutrient:
+                logging.info('Reading %s...' % NUTR_DEF)
+                create_update_nutrients(''.join([byte for byte in zip_file.read(NUTR_DEF)]).splitlines(), encoding)
+            if parse_all or parse_footnote:
+                logging.info('Reading %s...' % FOOTNOTE)
+                create_update_footnotes(''.join([byte for byte in zip_file.read(FOOTNOTE)]).splitlines())
+            if parse_all or parse_datasource:
+                logging.info('Reading %s...' % DATA_SRC)
+                create_update_data_sources(''.join([byte for byte in zip_file.read(DATA_SRC)]).splitlines())
+            if parse_all or parse_derivation:
+                logging.info('Reading %s...' % DERIV_CD)
+                create_update_derivations(''.join([byte for byte in zip_file.read(DERIV_CD)]).splitlines())
+            if parse_all or parse_source:
+                logging.info('Reading %s...' % SRC_CD)
+                create_update_sources(''.join([byte for byte in zip_file.read(SRC_CD)]).splitlines())
+            if parse_all or parse_data:
+                logging.info('Reading %s...' % NUT_DATA)
+                create_update_nutrient_data(''.join([byte for byte in zip_file.read(NUT_DATA)]).splitlines())
+            
         zip_file.close()
 
 
