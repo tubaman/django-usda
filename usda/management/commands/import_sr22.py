@@ -75,7 +75,7 @@ class Command(BaseCommand):
         parse_derivation = options.get('derivation')
         parse_source = options.get('source')
         parse_data = options.get('data')
-        encoding = options.get('encoding')
+        encoding = options.get('encoding', 'iso-8859-1')
         
         if not os.path.exists(options['filename']):
             CommandError('%s does not exist' % options['filename'])
@@ -111,7 +111,7 @@ class Command(BaseCommand):
                 create_update_foods(''.join([byte for byte in zip_file.read(FOOD_DES)]).splitlines(), encoding)
             if parse_all or parse_weight:
                 logging.info('Reading %s...' % WEIGHT)
-                create_update_weights(''.join([byte for byte in zip_file.read(WEIGHT)]).splitlines())
+                create_update_weights(''.join([byte for byte in zip_file.read(WEIGHT)]).splitlines(), encoding)
             if parse_all or parse_nutrient:
                 logging.info('Reading %s...' % NUTR_DEF)
                 create_update_nutrients(''.join([byte for byte in zip_file.read(NUTR_DEF)]).splitlines(), encoding)
@@ -224,17 +224,18 @@ def create_update_foods(data, encoding):
     logging.info('Updated %d foods' % total_updated)
 
 
-def create_update_weights(data):
+def create_update_weights(data, encoding):
     total_created = 0
     total_updated = 0
     
     logging.info('Processing %d weights' % len(data))
     
-    for row in csv.DictReader(
+    for row in UnicodeDictReader(
         data, fieldnames=(
             'ndb_no', 'seq', 'amount', 'msre_desc', 'gm_wgt', 'num_data_pts', 'std_dev'
         ),
-        delimiter='^', quotechar='~'
+        delimiter='^', quotechar='~',
+        encoding=encoding
     ):
         created = False
         
