@@ -22,7 +22,7 @@ NUTRIENT_DATA_STEP = 1000
 
 class Command(BaseCommand):
     option_list = BaseCommand.option_list + (
-        optparse.make_option('-f', '--filename', action='store', dest='filename', help='The compressed SR22 filename', default='sr22.zip'),
+        optparse.make_option('-f', '--filename', action='store', dest='filename', help='The compressed SR27 filename', default='sr27asc.zip'),
         optparse.make_option('--database', action='store', dest='database', help='Specify database to load data into. Defaults to the "default" database.', default=DEFAULT_DB_ALIAS),
         optparse.make_option('--all', action='store_true', dest='all', help='Create/Update all data.'),
         optparse.make_option('--food', action='store_true', dest='food', help='Create/Update foods.'),
@@ -36,7 +36,7 @@ class Command(BaseCommand):
         optparse.make_option('--data', action='store_true', dest='data', help='Create/Update nutrient data.'),
         optparse.make_option('--encoding', action='store', dest='encoding', help='Specify the src file encoding. Defaults to cp1252.', default='cp1252')
     )
-    help = 'Updates/Created all SR22 data.'
+    help = 'Updates/Created all SR27 data.'
     
     def handle(*args, **options):
         FOOD_DES = 'FOOD_DES.txt'
@@ -99,7 +99,7 @@ class Command(BaseCommand):
         # Verify integrity of zip file by checking that all required files are present
         missing_files = [required_file for required_file in required_files if not required_file in zip_file.namelist()]
         if missing_files:
-            logging.error('%s does not appear to be a valid SR22 database.  Unable to extract %s' % (filename, ', '.join(missing_files)))
+            logging.error('%s does not appear to be a valid SR27 database.  Unable to extract %s' % (filename, ', '.join(missing_files)))
        
         with transaction.atomic(using=using):
         
@@ -324,7 +324,7 @@ def create_update_footnotes(data):
     ):
         created = False
         
-        # SR22 definition indicates that `footnt_no` and `footnt_typ` are required,
+        # SR27 definition indicates that `footnt_no` and `footnt_typ` are required,
         # but on occasion, either on is blank.  To compensate for this, we assume
         # a blank `footnt_no` is '1' and a blank`footnt_typ` is 'N'.
         if row['footnt_no'] == '':
@@ -431,7 +431,7 @@ def create_update_derivations(data):
             total_created += 1
             created = True
         
-        # SR22 defines `deriv_desc` as being a maximum length of 120 characters,
+        # SR27 defines `deriv_desc` as being a maximum length of 120 characters,
         # however, there is at least one instance where `deriv_desc` is greater
         # than this max.  To deal with this, truncate to 120 characters.
         derivation.description = row['deriv_desc'][:120]

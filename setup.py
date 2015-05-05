@@ -7,7 +7,7 @@ def read(fname):
 setup(
     name='django-usda',
     version='0.1.0beta',
-    description='Import and map the USDA National Nutrient Database for Standard Reference (SR22) to Django models',
+    description='Import and map the USDA National Nutrient Database for Standard Reference (SR27) to Django models',
     long_description=read('README.rst'),
     classifiers=[
         'Development Status :: 4 - Beta',
